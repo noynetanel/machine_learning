@@ -55,7 +55,7 @@ class Network(object):
                         "forward_outputs" - A list of length self.num_layers containing the forward computation (parameters & output of each layer).
         """
         L = self.num_layers
-        ZL = X
+        ZL = np.copy(X)
         forward_outputs = []
 
         for l in range(L):
@@ -82,26 +82,26 @@ class Network(object):
         
         # start
         delta_L = self.cross_entropy_derivative(ZL, Y)
-        curr_ZL = forward_outputs[L - 1][1]
-        grads["dW" + str(L)] = np.dot(delta_L, np.transpose(curr_ZL)) / m
-        grads["db" + str(L)] = np.mean(delta_L, axis=1, keepdims=True)
+        cur_ZL = forward_outputs[L - 1][1]
+        grads["dW" + str(L)] = np.dot(delta_L, np.transpose(cur_ZL)) / m
+        grads["db" + str(L)] = np.sum(delta_L, axis=1, keepdims=True) / m
 
         if L > 1:  # if L > 1 get to second iteration 
             delta_Li = np.dot(np.transpose(self.parameters["W" + str(L)]), delta_L)
-            curr_ZL = forward_outputs[L - 2][1]
+            cur_ZL = forward_outputs[L - 2][1]
             grads["dW" + str(L - 1)] = np.dot((delta_Li * self.relu_derivative(forward_outputs[L - 2][0])),
-                                              np.transpose(curr_ZL)) / m
-            grads["db" + str(L - 1)] = np.mean(delta_Li * self.relu_derivative(forward_outputs[L - 2][0]), axis=1,
-                                               keepdims=True)
+                                              np.transpose(cur_ZL)) / m
+            grads["db" + str(L - 1)] = np.sum(delta_Li * self.relu_derivative(forward_outputs[L - 2][0]), axis=1,
+                                               keepdims=True) / m
         # loop over the rest
         for l in range(L - 2, 0, -1):
             delta_Li = np.dot(np.transpose(self.parameters["W" + str(l + 1)]), delta_Li *
                               self.relu_derivative(forward_outputs[l][0]))
-            curr_ZL = forward_outputs[l - 2][1]
+            cur_ZL = forward_outputs[l - 2][1]
             grads["dW" + str(l)] = np.dot((delta_Li * self.relu_derivative(forward_outputs[l - 1][0])),
-                                          np.transpose(curr_ZL)) / m
-            grads["db" + str(l)] = np.mean(delta_Li * self.relu_derivative(forward_outputs[l - 1][0]), axis=1,
-                                           keepdims=True)
+                                          np.transpose(cur_ZL)) / m
+            grads["db" + str(l)] = np.sum(delta_Li * self.relu_derivative(forward_outputs[l - 1][0]), axis=1,
+                                           keepdims=True) / m
         return grads
 
     def sgd_step(self, grads, learning_rate):

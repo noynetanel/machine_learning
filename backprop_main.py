@@ -85,7 +85,7 @@ x_train, y_train, x_test, y_test = load_as_matrix_with_labels(n_train, n_test)
 parameters, train_loss_epoch, test_loss_epoch, train_accu_epoch, test_accu_epoch = net.train(
     x_train, y_train, epochs, batch_size, learning_rate, x_test=x_test, y_test=y_test)
 
-# Get the final test accuracy
+# final test accuracy
 final_epoch_test_acc = test_accu_epoch[-1]
 print(f"final epoch test accuracy: {final_epoch_test_acc:}")
 
@@ -140,14 +140,14 @@ plt.show()
 # section e:
 
 # we need to train on the entire dataset
-learning_rate = 0.1  # Assuming this is the optimal learning rate from previous experiments
+learning_rate = 1  # Assuming this is the optimal learning rate from previous experiments
 np.random.seed(0)
 n_train = 50000
 n_test = 10000
-batch_size = 140
+batch_size = 200
 epochs = 30
 # Network configuration
-layer_dims = [784, 40, 10]
+layer_dims = [784, 150, 10]
 net = Network(layer_dims)
 x_train, y_train, x_test, y_test = load_as_matrix_with_labels(n_train, n_test)
 
@@ -155,6 +155,6 @@ x_train, y_train, x_test, y_test = load_as_matrix_with_labels(n_train, n_test)
 parameters, train_loss_epoch, test_loss_epoch, train_accu_epoch, test_accu_epoch = net.train(
     x_train, y_train, epochs, batch_size, learning_rate, x_test=x_test, y_test=y_test)
 
-# Get the final test accuracy
+# final test accuracy
 final_epoch_test_acc = test_accu_epoch[-1]
 print(f"final epoch test accuracy: {final_epoch_test_acc:}")
